@@ -16,7 +16,7 @@ def login():
         login_user(user)
         return view.response()
     except Exception as e:
-        models.session.rollback()
+        # models.session.rollback()
         return view.response(status=401, messages=[e.message])
 
 
