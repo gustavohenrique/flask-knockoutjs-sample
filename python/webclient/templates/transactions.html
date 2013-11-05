@@ -1,0 +1,106 @@
+{% extends 'base_datagrid.html' %}
+
+{% block other_javascript %}
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    settings.grid.ordering = 'desc';
+    settings.grid.pagesize = 30;
+    settings.grid.services = {
+        load: BASE_API_URL + 'transactions?ordering=desc',
+        remove: BASE_API_URL + 'transaction/delete/$id',
+        save: BASE_API_URL + 'transaction/save'
+    };
+    settings.grid.columns = [
+        { text: '', datafield: 'id', columntype: 'textbox', hidden: true, editable: false },
+        { text: 'transaction.Date', classname: 'i18n', datafield: 'transaction_date', columntype: 'date', width: 110, cellsalign: 'left', cellsformat: 'yyyy-MM-dd',
+            validation: function (cell, value) {
+                var transactionYear = moment(value(), "YYYY-MM-DD").year(),
+                    currentYear = moment().year();
+
+                if (transactionYear >= 1900 && transactionYear <= currentYear) {
+                    return true;
+                }
+                return { result: false, message: "Year should be between 1900 and " + currentYear };
+            }
+        },
+        { text: 'transaction.Description', classname: 'i18n', datafield: 'description', columntype: 'textbox' },
+        { text: 'transaction.Amount', classname: 'i18n', datafield: 'amount', width: 65, cellsalign: 'right', columntype: 'textbox',
+            validation: function (cell, value) {
+                var amount = parseFloat(value());
+                return isNaN(amount) ? { result: false, message: "It is not a number" } : true;
+            }
+        },
+        { text: 'transaction.Category', classname: 'i18n', columntype: 'dropdownlist', datafield: 'category', width: 177, cellsrenderer: poupaniquel.utils.dropdown.cellsrenderer, initeditor: poupaniquel.utils.dropdown.initeditor },
+        { text: 'transaction.Account', classname: 'i18n', columntype: 'dropdownlist', datafield: 'account', width: 177, cellsrenderer: poupaniquel.utils.dropdown.cellsrenderer, initeditor: poupaniquel.utils.dropdown.initeditor },
+        { text: 'transaction.Payee', classname: 'i18n', columntype: 'dropdownlist', datafield: 'payee', width: 177, cellsrenderer: poupaniquel.utils.dropdown.cellsrenderer, initeditor: poupaniquel.utils.dropdown.initeditor }
+    ];
+    settings.dropdown = [{
+        datafield: 'account',
+        url: BASE_API_URL + 'accounts',
+        root: 'fields'
+    }, {
+        datafield: 'category',
+        url: BASE_API_URL + 'categories',
+        root: 'fields'
+    }, {
+        datafield: 'payee',
+        url: BASE_API_URL + 'payees',
+        root: 'fields'
+    }];
+    poupaniquel.configure(settings);
+})
+</script>
+{% endblock %}
+
+{% block title %}<span data-i18n="nav.Transactions"></span>{% endblock %}
+
+{% block more_content %}
+
+<!-- Modal -->
+<div class="modal hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Filter Options</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="startDate">Start date</label>
+                <div class="controls">
+                    <input type="text" placeholder="start date" value="2012-01-08" class="datepicker" data-date-format="yyyy-mm-dd" id="startDate">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="endDate">End date</label>
+                <div class="controls">
+                    <input type="text" placeholder="end date" value="2012-01-08" class="datepicker" data-date-format="yyyy-mm-dd" id="endDate">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="categories">Categories</label>
+                <div class="controls">
+                    <select data-bind="options: category, optionsText: 'name', value: chosencategory"></select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="payees">Payees</label>
+                <div class="controls">
+                    <select data-bind="options: payee, optionsText: 'name', value: chosenpayee"></select>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button data-bind="click: filter" class="btn btn-primary">Apply</button>
+    </div>
+</div>
+<!-- modal end -->
+
+{% endblock %}

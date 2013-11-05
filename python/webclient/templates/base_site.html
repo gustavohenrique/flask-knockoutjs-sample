@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="{{ url_for('index') }}">poupaniquel</a>
+                
+            <!-- authenticated users -->
+            <div id="topbarForAuthenticatedUsers" style="display:none">
+                <div class="nav-collapse">
+                    <!-- <ul class="nav"> -->
+
+                    <ul class="nav pull-right i18n">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-i18n="nav.Manage"><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('accounts') }}" data-i18n="nav.Accounts"></a></li>
+                                <li><a href="{{ url_for('categories') }}" data-i18n="nav.Categories"></a></li>
+                                <li><a href="{{ url_for('payees') }}" data-i18n="nav.Payees"></a></li>
+                                <li><a href="{{ url_for('transactions') }}" data-i18n="nav.Transactions"></a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url_for('scheduled_transactions') }}" data-i18n="nav.ScheduledTransactions"></a></li>
+                                <!-- <li><a href="#"></a></li> -->
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('calculator') }}" data-i18n="nav.Calculator">Calculadora</a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-i18n="nav.Reports"></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('balance') }}" data-i18n="nav.Balance">Balance</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-i18n="nav.Importing"></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('homebank') }}">Homebank</a></li>
+                                <li><a href="{{ url_for('csv') }}" data-i18n="nav.Csv">CSV</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="divider-vertical"></li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-i18n="nav.User">User</a>
+                            <ul class="dropdown-menu">
+                                <!-- <li><a href="#">Password</a></li> -->
+                                <li><a href="javascript:logout()">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div> <!-- authenticated users -->
+
+            <div id="topbarForAnonymous" style="display:none">
+                <div class="nav-collapse">
+                    <!-- <ul class="nav"> -->
+
+                    <ul class="nav pull-right i18n">
+                        <li>
+                            <a href="{{ url_for('signin') }}" data-i18n="nav.Login">Login</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('signup') }}" data-i18n="nav.Signup">Signup</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+{% endblock %}

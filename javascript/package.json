@@ -1,0 +1,20 @@
+{
+    "name": "poupaniquel",
+    "version": "0.1",
+    "main": "./dist/poupaniquel.js",
+    "homepage": "http://gustavohenrique.net",
+    "author": {
+        "name": "Gustavo Henrique",
+        "email": "gustavo@gustavohenrique.net"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gustavohenrique/poupaniquel-javascript"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://github.com/cowboy/grunt/blob/master/LICENSE-MIT"
+        }
+    ]
+}

@@ -1,0 +1,123 @@
+{% extends 'base_site.html' %}
+
+{% block more_javascript %}
+<script type="text/javascript">
+$(function () {
+    var error = function(response) {
+        $('#error span:first').text(response.messages[0]);
+        $('#error').show();
+    };
+
+    var Model = function (items) {
+        var $this = this,
+            accountsUrl = BASE_API_URL + 'accounts';
+
+        $this.items = ko.observableArray();
+        $this.accounts = poupaniquel.getAjax(accountsUrl)['fields'];
+        $this.chosenAccount = ko.observable({id: 0});
+
+        $this.addItem = function(item) {
+            $this.items.push(item);
+        };
+    };
+    var model = new Model();
+    ko.applyBindings(model);
+
+    $('#frmUpload').iframePostForm({
+        iframeID : 'iframe-post-form',
+        json : true,
+        post: function() {
+        },
+        complete: function (response) {
+            if (response.total > 0) {
+                $('#error').hide();
+
+                for (var rowIndex = 0; rowIndex < response.fields.length; rowIndex++) {
+                    var row = response.fields[rowIndex],
+                        keys = Object.keys(row);
+
+                    var items = [];
+                    for (var colIndex = 0; colIndex < keys.length; colIndex++) {
+                        var field = keys[colIndex],
+                            value = row[field];
+                        items.push(value);
+                    }
+                    model.addItem(items);
+                }
+
+                $('#frmUpload').hide();
+                $('#result').show();
+
+            } else {
+                error(response);
+            }
+        }
+    });
+});
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h1 class="i18n"><span data-i18n="title.Importing.Importing"></span></h1>
+
+<div id="error" class="alert alert-error alert-block i18n" style="display:none">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4>Error</h4>
+    <span></span><br/>
+    <span data-i18n="importing.ErrorMessage"></span>
+</div>
+
+<form id="frmUpload" name="frmUpload" action="{{ url_for('csv_importing') }}" method="POST" enctype="multipart/form-data" class="form-horizontal i18n">
+    <legend>CSV</legend>
+
+    <div class="control-group">
+        <label class="control-label" for="separator" data-i18n="importing.Account">Account</label>
+        <div class="controls">
+            <select data-bind="options: accounts, optionsText: 'name', value: chosenAccount"></select>
+        </div>
+        <input name="account" type="hidden" data-bind="value: chosenAccount().id"/>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="separator" data-i18n="importing.Template">Template</label>
+        <div class="controls">
+            <select name="template">
+                <option value="none">None</option>
+                <option value="bradescopj">Bradesco</option>
+                <option value="itaupf">Itau</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="filename" data-i18n="title.Importing.File">File (*.csv)</label>
+        <div class="controls">
+            <input id="filename" type="file" size="45" name="filename">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">&nbsp;</label>
+        <div class="controls">
+            <button id="btnUpload" type="submit" class="btn btn-primary" data-i18n="importing.Upload" data-bind="enable: chosenAccount().id > 0"></button>
+        </div>
+    </div>
+</form>
+
+<div id="result" style="display:none">
+    <form id="formResult" name="formResult" class="i18n">
+        <legend><span data-i18n="importing.result.title">Result</span></legend>
+        <p data-i18n="importing.result.message"></p>
+
+        <table id="csv" class="table table-condensed table-striped">
+            <tbody data-bind="foreach: items">
+                <tr data-bind="foreach: $data">
+                    <td><span data-bind="text: $data"> </span></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+{
+  "nav": {
+    "Manage": "Manage",
+    "Accounts": "Accounts",
+    "Categories": "Categories",
+    "Payees": "Payees",
+    "Transactions": "Transactions",
+    "ScheduledTransactions": "Scheduled Transactions",
+
+    "Reports": "Reports",
+    "Balance": "Balance",
+
+    "Importing": "Importing",
+    "Csv": "CSV File",
+
+    "User": "User",
+    "Login": "Login",
+    "Signup": "Signup",
+
+    "Calculator": "Calculator"
+  },
+
+  "title": {
+    "UpcomingTransactions": "Upcoming Transactions",
+    "GeneralInfo": "General Info",
+    "OptionalInfo": "Optional Info",
+    "AutomatedInsertion": "Automated Insertion",
+    "User": {
+      "Signup": "Sign up",
+      "Login": "Login"
+    },
+    "Importing": {
+      "Importing": "Importing data from file",
+      "File": "File",
+      "DateFormat": "Date format",
+      "Separator": {
+        "Separator": "Separator",
+        "semicolon": "semicolon (;)",
+        "comma": "comma (,)",
+        "colon": "colon (:)",
+        "hyphen": "hyphen (-)",
+        "space": "space",
+        "tab": "tab"
+      }
+    }
+  },
+
+  "grid": {
+    "NextOn": "Next on",
+    "Account": "Account",
+    "Description": "Description",
+    "Amount": "Amount",
+    "Frequency": "Frequency",
+    "Every": "Every",
+    "Name": "Name"
+  },
+
+  "transaction": {
+    "Account": "Account",
+    "Description": "Description",
+    "Name": "Name",
+    "Date": "Date",
+    "Amount": "Amount",
+    "Category": "Category",
+    "Payee": "Payee",
+    "Every": "Every",
+    "NextOn": "Next on",
+    "Frequency": "Frequency",
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "Week": "Week",
+    "Month": "Month",
+    "Year": "Year"
+  },
+
+  "reports": {
+    "balance": {
+      "MonthYear": "Month/Year",
+      "Balance": "Balance"
+    }
+  },
+
+  "importing": {
+    "Account": "Account",
+    "Upload": "Upload",
+    "Template": "Template",
+    "ErrorMessage": "The data could not be imported",
+    "result": {
+      "title": "Result",
+      "message": "The data below was successfully imported."
+    }
+  },
+
+  "user": {
+    "Username": "Email",
+    "Password": "Password",
+    "signup": {
+      "legend": "Create your personal account",
+      "button": "Sign up",
+      "success": "The user has been registered. Use the token below for authentication on other devices.",
+      "error": "Could not register this username."
+    },
+    "login": {
+      "legend": "Login using email and password",
+      "button": "Ok",
+      "error": "Could not sign in using this email or password.",
+      "isAuthenticated": "You already logged."
+    }
+  },
+
+  "calculator": {
+    "Description": "Description",
+    "Amount": "Amount ($)",
+    "Balance": "Balance",
+    "Income": "Income",
+    "Expense": "Expense",
+    "Others": "Others",
+    "Result": "Result",
+    "Calculate": "Calculate",
+    "error": {
+      "message": "There was an error while calculating."
+    }
+  },
+
+  "messages": {
+    "success": {
+      "title": "Success",
+      "saveOrUpdate": "The data was successfully updated."
+    },
+    "error": {
+      "title": "Error",
+      "saveOrUpdate": "The data could not be updated."
+    }
+  },
+
+  "buttons": {
+    "Finish": "Finish",
+    "Add": "Add",
+    "Save": "Save",
+    "Remove": "Remove",
+    "Refresh": "Refresh",
+    "Filter": "Filter"
+  }
+}

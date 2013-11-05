@@ -1,0 +1,107 @@
+{% extends 'base_site.html' %}
+
+{% block more_javascript %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='js/jqwidgets/styles/jqx.base.css') }}" />
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxcore.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/globalization/jquery.global.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxdata.js') }}"></script> 
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxbuttons.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxscrollbar.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxmenu.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxgrid.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxgrid.pager.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxgrid.filter.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxgrid.sort.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxgrid.edit.js') }}"></script>  
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxgrid.selection.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxgrid.columnsresize.js') }}"></script>
+ 
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxlistbox.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxdropdownlist.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxcalendar.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxnumberinput.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jqwidgets/jqxdatetimeinput.js') }}"></script>
+
+
+<style type="text/css">
+  input.jqx-grid-pager-input, input.filtertext1jqxgrid { padding: 0; }
+  input.filtertext2jqxgrid { padding: 0; margin-bottom: 0; }
+  #pager.jqx-grid-pager { border-top: 1px solid transparent; }
+  #dropdownlistContentgridpagerlistjqxgrid.jqx-dropdownlist-content { line-height: 17px; }
+</style>
+
+<script type="text/javascript">
+  var settings = {
+      grid: {
+          services: {},
+          success: function(result) {
+              $('#success').show();
+          },
+          error: function(response) {
+              var errors = '';
+              for (var i = 0; i < response.messages.length; i++) {
+                  var msg = response.messages[i];
+                  errors = errors + '<li>' + msg + '</li>';
+              }
+              $('#error ul:first').append(errors);
+              $('#error').show();
+          },
+          root: 'fields',
+
+          elementId: '#jqxgrid',
+          autoheight: true,
+          theme: '',
+          width: '100%',
+          columnsresize: true,
+          editable: true,
+
+          sortable: true,
+          showsortcolumnbackground: true,
+
+          pageable: true,
+          pagesizeoptions: ['15', '30', '60', '90'],
+
+          filterable: false,
+          autoshowfiltericon: true,
+          showfiltercolumnbackground: false,
+
+          editmode: 'selectedcell',
+          columns: []
+      },
+      error: function(response) {
+          $('#error span:first').text(response.statusText);
+          $('#error').show();
+      }
+  };
+</script>
+
+{% block other_javascript %}{% endblock %}
+
+{% endblock %}
+
+{% block content %}
+
+<h1 class="i18n">{% block title %}{% endblock %}</h1>
+
+{% block top_toolbar %}
+    {% include 'pagination_toolbar.html' %}
+{% endblock %}
+
+{% include 'default_messages.html' %}
+
+<div id="jqxgrid" class="i18n">
+    <img src="{{ url_for('static', filename='img/loading.gif') }}" alt="Loading..." title="Loading..." />
+</div>
+
+
+{% block bottom_toolbar %}
+    {% include 'pagination_toolbar.html' %}
+{% endblock %}
+
+
+{% block more_content %}{% endblock %}
+
+
+{% endblock %}

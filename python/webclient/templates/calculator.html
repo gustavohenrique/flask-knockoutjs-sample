@@ -1,0 +1,144 @@
+{% extends 'base_datagrid.html' %}
+
+{% block other_javascript %}
+
+<script type="text/javascript">
+$(document).ready(function () {
+    try {
+        var response = poupaniquel.getAjax(BASE_API_URL + 'accounts'),
+            accounts = $('#accounts');
+        if (response.status === 200) {
+            for (var i=0; i<response.fields.length; i++) {
+                var field = response.fields[i];
+                accounts.append('<option value="' + field.id + '">' + field.name + '</option>');
+            }
+        }
+    } catch(e) {}
+
+    settings.grid.columns = [
+        { text: 'transaction.Date', classname: 'i18n', datafield: 'transaction_date', columntype: 'date', width: 110, cellsalign: 'left', cellsformat: 'yyyy-MM-dd',
+            validation: function (cell, value) {
+                var transactionYear = moment(value(), "YYYY-MM-DD").year(),
+                    currentYear = moment().year();
+
+                if (transactionYear >= currentYear) {
+                    return true;
+                }
+                return {result: false, message: "Year should be equal of after " + currentYear};
+            }
+        },
+        { text: 'transaction.Description', classname: 'i18n', datafield: 'description', columntype: 'textbox' },
+        { text: 'transaction.Amount', classname: 'i18n', datafield: 'amount', width: 65, cellsalign: 'right', columntype: 'textbox',
+            validation: function (cell, value) {
+                var amount = parseFloat(value());
+                return isNaN(amount) ? { result: false, message: "It is not a number" } : true;
+            }
+        }
+    ];
+    poupaniquel.configure(settings);
+
+    $('input[name=date]').datepicker({
+        format: 'yyyy-mm-dd'
+    });
+});
+
+var error = function(response) {
+    $('#error span:first').text(response.messages[0]);
+    $('#error').show();
+};
+
+var submitAjax = function() {
+    var data = {
+        'account': $('#accounts option:selected').val(),
+        'date': $('#date').val(),
+        'transactions': poupaniquel.model.items
+    };
+    $.ajax({
+        async: true,
+        url: BASE_API_URL + 'calculator/calculate',
+        contentType: 'application/json',
+        type: 'POST',
+        dataType: 'json',
+        data: ko.toJSON(data),
+        success: function(response) {
+            var fields = response.fields;
+            $('#balance').text(fields.balance);
+            $('#income').text(fields.income);
+            $('#expense').text(fields.expense);
+            $('#others').text(fields.transactions);
+            $('#total').text(fields.amount);
+            $('#calculator').show();
+        },
+        error: function(response) {
+            error(response);
+        }
+    });
+};
+</script>
+{% endblock %}
+
+{% block title %}<span data-i18n="nav.Calculator">Calculator</span>{% endblock %}
+
+{% block top_toolbar %}{% endblock %}
+
+{% block bottom_toolbar %}
+<div class="btn-toolbar pagination-toolbar i18n">
+    <div class="btn-group">
+        <a data-bind='click: addItem' class="btnadd btn" href="#" title="Add new data"><i class="icon-plus"></i> <span data-i18n="buttons.Add">Add</span></a>
+        <a data-bind='click: removeItem' class="btndelete btn disabled" href="#" title="Select a row to remove"><i class="icon-remove"></i> <span data-i18n="buttons.Remove"></span></a>
+    </div>
+</div>
+{% endblock %}
+
+{% block more_content %}
+<div id="error" class="alert alert-error alert-block i18n" style="display:none">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 data-i18n="messages.error.title">Error</h4>
+    <span></span><br/>
+    <span data-i18n="calculator.error.message"></span>
+</div>
+
+<form class="form-inline well i18n">
+        <select id="accounts" name="account"></select>
+        <input class="span2" id="date" name="date" size="16" type="text" placeholder="Data">
+        <button type="button" onclick="submitAjax()" class="btnsave btn btn-primary"><span data-i18n="calculator.Calculate">Calculate</span></button>
+</form>
+
+<div id="calculator" class="i18n">
+    <h1 data-i18n="calculator.Result">Resultado</h1>
+
+    <form id="formResult" name="formResult" class="i18n">
+        <table id="results" class="table table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <th data-i18n="calculator.Description">Description</th>
+                    <th data-i18n="calculator.Amount" class="right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-i18n="calculator.Balance">Balance</td>
+                    <td id="balance" class="right"></td>
+                </tr>
+                <tr>
+                    <td data-i18n="calculator.Income">Income</td>
+                    <td id="income" class="right"></td>
+                </tr>
+                <tr>
+                    <td data-i18n="calculator.Expense">Expense</td>
+                    <td id="expense" class="right"></td>
+                </tr>
+                <tr>
+                    <td data-i18n="calculator.Others">Others</td>
+                    <td id="others" class="right"></td>
+                </tr>
+                <tr class="info">
+                    <td>Total</td>
+                    <td id="total" class="right"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+{% endblock %}

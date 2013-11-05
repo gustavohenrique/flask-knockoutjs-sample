@@ -1,0 +1,80 @@
+{% extends 'base_site.html' %}
+
+{% block more_javascript %}
+<script type="text/javascript">
+$(function() {
+    if (isAuthenticated) {
+        $('#frmLogin').hide();
+        $('#isAuthenticated').show();
+    } else {
+        $('#frmLogin').show();
+        $('#isAuthenticated').hide();
+    }
+});
+var submitAjax = function() {
+    var url = BASE_API_URL + 'authentication/login',
+        data = {'username': $('#username').val(), 'password': $('#password').val()};
+
+    $.ajax({
+        async: false,
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        url: url,
+        data: JSON.stringify(data),
+        success: function(response) {
+            window.location.href = "{{ url_for('index') }}";
+        },
+        error: function(response) {
+            var data = JSON.parse(response.responseText);
+            $('#error span:first').text(data.messages[0]);
+            $('#error').show();
+            $('#password').val('');
+        }
+    });
+    
+
+    return false;
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<h1 class="i18n"><span data-i18n="title.User.Login"></span></h1>
+
+<div id="error" class="alert alert-error alert-block i18n" style="display:none">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 data-i18n="messages.error.title">Error</h4>
+    <span></span><br/>
+    <span data-i18n="user.login.error"></span>
+</div>
+
+
+<form id="frmLogin" name="frmLogin" action="" method="POST" class="form-horizontal i18n" style="display:none">
+    <legend data-i18n="user.login.legend"></legend>
+
+    <div class="control-group">
+        <label class="control-label" for="filename" maxlength="50" data-i18n="user.Username">E-mail</label>
+        <div class="controls">
+            <input id="username" type="text" name="username">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="filename" maxlength="16" data-i18n="user.Password">Password</label>
+        <div class="controls">
+            <input id="password" type="password" name="password">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">&nbsp;</label>
+        <div class="controls">
+            <button type="button" onclick="submitAjax()" class="btn btn-primary" data-i18n="user.login.button">Sign up</button>
+        </div>
+    </div>
+</form>
+
+<div id="isAuthenticated" class="i18n" style="display:none">
+    <h3 data-i18n="user.login.isAuthenticated" style="color: green"></h3>
+</div>
+
+{% endblock %}

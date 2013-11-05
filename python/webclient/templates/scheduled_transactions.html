@@ -1,0 +1,265 @@
+{% extends 'base_site.html' %}
+
+{% block more_javascript %}
+<script src="{{ url_for('static', filename='js/poupaniquel/poupaniquel-0.1.js') }}"></script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    var Model = function() {
+        var $this = this,
+            root = 'fields';
+
+        $this.accounts = poupaniquel.getAjax(BASE_API_URL + 'accounts')[root];
+        $this.chosenAccount = ko.observable();
+
+        $this.payees = poupaniquel.getAjax(BASE_API_URL + 'payees')[root];
+        $this.chosenPayee = ko.observable();
+
+        $this.categories = poupaniquel.getAjax(BASE_API_URL + 'categories')[root];
+        $this.chosenCategory = ko.observable();
+
+        $this.unitReplication = [
+            {"id": "months", "name": i18n.t("transaction.Month")},
+            {"id": "weeks", "name": i18n.t("transaction.Week")},
+            {"id": "years", "name": i18n.t("transaction.Year")}
+        ];
+        $this.chosenUnitReplication = ko.observable();
+
+        $this.numberReplication = ko.observable(1);
+        $this.nextOn = ko.observable(new Date());//moment().format('YYYY-MM-DD'));
+        $this.description = ko.observable('');
+        $this.amount = ko.observable(0);
+        $this.frequency = ko.observable(1);
+
+        var transactions = poupaniquel.getAjax(BASE_API_URL + 'scheduled/transactions')[root];
+        if (transactions === undefined) {
+            transactions = [];
+        }
+        $this.scheduledTransactions = ko.observableArray(transactions);
+
+        $this.load = function() {
+            var transactions = poupaniquel.getAjax(BASE_API_URL + 'scheduled/transactions')[root];
+            $this.scheduledTransactions(transactions);
+        };
+
+        $this.remove = function(transaction) {
+            var key = transaction.key,
+                response = poupaniquel.getAjax(BASE_API_URL + 'scheduled/transaction/delete/' + key);
+
+            if (response.success === true) {
+                $this.load();
+            }
+        };
+
+        $this.resetForm = function() {
+            $this.chosenUnitReplication();
+            $this.numberReplication(1);
+            $this.nextOn();
+            $this.description('');
+            $this.amount(0);
+            $this.frequency(0);
+        };
+
+        $this.save = function() {
+            var url = BASE_API_URL + 'scheduled/transaction/save';
+
+            var data = {
+                description: $this.description(),
+                amount: $this.amount(),
+                account: $this.chosenAccount(),
+                category: $this.chosenCategory(),
+                payee: $this.chosenPayee(),
+                frequency: $this.frequency(),
+                unit_replications: $this.chosenUnitReplication().id,
+                number_replications: $this.numberReplication(),
+                transaction_date: moment($this.nextOn()).format('YYYY-MM-DD')
+            };
+
+            $.ajax({
+                async: true,
+                url: url,
+                contentType: 'application/json',
+                type: 'POST',
+                dataType: 'json',
+                data: ko.toJSON(data),
+                success: function() {
+                    $this.load();
+                    $this.resetForm();
+                    $('#error').hide();
+                    $('#success').show();
+                },
+                error: function(response) {
+                    var divError = $('#error'),
+                        data = JSON.parse(response.responseText);
+
+                    divError.append('<span>' + data.messages[0] + '</span>');
+                    divError.show();
+                    $('#success').hide();
+                }
+            });
+        };
+    };
+
+    ko.bindingHandlers.datepicker = {
+        init: function(element, valueAccessor, allBindingsAccessor) {
+            $(element).datepicker({format: 'yyyy-mm-dd'});
+
+            ko.utils.registerEventHandler(element, "changeDate", function(event) {
+                var value = valueAccessor();
+                if (ko.isObservable(value)) {
+                    // var formatted = moment(event.date).format('YYYY-MM-DD');
+                    value(event.date);
+                }
+            });
+        },
+        update: function(element, valueAccessor)   {
+            var widget = $(element).data("datepicker");
+             //when the view model is updated, update the widget
+            if (widget) {
+                var dt = ko.utils.unwrapObservable(valueAccessor());
+                widget.date = dt;
+                if (widget.date) {
+                    widget.setValue();            
+                }
+            }
+        }
+    };
+
+    ko.applyBindings(new Model());
+
+    // $('input[name=nextOn]').datepicker({
+    //     format: 'yyyy-mm-dd'
+    // });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h1 class="i18n"><span data-i18n="nav.ScheduledTransactions"></span></h1>
+
+<div>
+
+    <div class="row">
+        
+        <div class="span5 i18n">
+            
+            <div id="error" class="alert alert-error alert-block i18n" style="display:none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4 data-i18n="messages.error.title">Error</h4>
+                <span data-i18n="messages.error.saveOrUpdate"></span>
+                <ul></ul>
+            </div>
+
+            <div id="success" class="alert alert-success alert-block i18n" style="display:none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4 data-i18n="messages.success.title">Success</h4>
+                <span data-i18n="messages.success.saveOrUpdate">The data was successfully updated</span>
+            </div>
+
+            <form class="form-horizontal">
+
+                <legend data-i18n="title.GeneralInfo">General info</legend>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.Account">Account</label>
+                    <div class="controls">
+                        <select data-bind="options: accounts, optionsText: 'name', value: chosenAccount"></select>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.Description">Description</label>
+                    <div class="controls">
+                        <input data-bind="value: description" type="text">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.Amount">Amount</label>
+                    <div class="controls">
+                        <input data-bind="value: amount" type="text">
+                    </div>
+                </div>
+
+
+                <legend data-i18n="title.OptionalInfo">Optional info</legend>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.Category">Category</label>
+                    <div class="controls">
+                        <select data-bind="options: categories, optionsCaption: 'Select...', optionsText: 'name', value: chosenCategory"></select>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.Payee">Payee</label>
+                    <div class="controls">
+                        <select data-bind="options: payees, optionsCaption: 'Select...', optionsText: 'name', value: chosenPayee"></select>
+                    </div>
+                </div>
+
+
+                <legend data-i18n="title.AutomatedInsertion">Automated insertion</legend>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.Every">Every</label>
+                    <div class="controls">
+                        <input data-bind="value: numberReplication" type="text" class="input-mini">
+                        <select data-bind="options: unitReplication, optionsText: 'name', value: chosenUnitReplication" class="input-small"></select>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.NextOn">Next on</label>
+                    <div class="controls">
+                        <input name="nextOn" data-bind="datepicker: nextOn" type="text">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" data-i18n="transaction.Frequency">Frequency</label>
+                    <div class="controls">
+                        <input data-bind="value: frequency" type="text" class="input-mini">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button data-bind="click: save, enable: description().length > 0" type="button" class="btn btn-primary"><span data-i18n="transaction.Save">Save</span></button>
+                    <button data-bind="click: resetForm, enable: description().length > 0" type="button" class="btn"><span data-i18n="transaction.Cancel">Save</span></button>
+                </div>
+
+            </form>
+
+        </div>
+
+        <div class="span7 i18n">
+            <table data-bind="visible: scheduledTransactions().length > 0" class="table table-striped table-bordered">
+                <thead>
+                    <th width="80" data-i18n="transaction.NextOn">Next on</th>
+                    <th data-i18n="transaction.Account">Account</th>
+                    <th data-i18n="transaction.Description">Description</th>
+                    <th width="80" data-i18n="transaction.Amount">Amount</th>
+                    <th data-i18n="transaction.Every">Every</th>
+                    <th width="10" data-i18n="transaction.Frequency">Frequency</th>
+                    <th width="10">&nbsp;</th>
+                </thead>
+                <tbody data-bind="foreach: scheduledTransactions">
+                    <tr>
+                        <td><span data-bind="text: transaction_date"></span></td>
+                        <td><span data-bind="text: account.name"></span></td>
+                        <td><span data-bind="text: description"></span></td>
+                        <td><span data-bind="text: amount"></span></td>
+                        <td><span data-bind="text: number_replications"></span> <span data-bind="text: unit_replications"></span></td>
+                        <td><span data-bind="text: frequency"></span></td>
+                        <td><a href="#" data-bind="click: $root.remove"><i class="icon-remove"></i></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

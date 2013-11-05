@@ -1,0 +1,23 @@
+{% extends 'base_datagrid.html' %}
+
+{% block other_javascript %}
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    settings.grid.services = {
+        load: BASE_API_URL + 'accounts',
+        remove: BASE_API_URL + 'account/delete/$id',
+        save: BASE_API_URL + 'account/save'
+    };
+    settings.grid.columns = [
+        { text: '', datafield: 'id', columntype: 'textbox', hidden: true, editable: false },
+        { text: 'transaction.Name', classname: 'i18n', datafield: 'name', columntype: 'textbox' },
+    ];
+    poupaniquel.configure(settings);
+})
+
+</script>
+{% endblock %}
+
+{% block title %}<span data-i18n="nav.Accounts"></span>{% endblock %}

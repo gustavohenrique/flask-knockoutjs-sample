@@ -1,0 +1,96 @@
+{% extends 'base_datagrid.html' %}
+
+{% block other_javascript %}
+
+<script type="text/javascript">
+if (! isAuthenticated) {
+    window.location.href = "{{ url_for('signin') }}";
+}
+
+$(document).ready(function () {
+    settings.grid.services = {
+        load: BASE_API_URL + 'scheduled/transactions',
+        remove: BASE_API_URL + 'scheduled/transaction/delete/$id',
+        save: BASE_API_URL + 'scheduled/transaction/save'
+    };
+
+    settings.grid.columns = [
+        { text: '', datafield: 'id', columntype: 'textbox', hidden: true, editable: false },
+        { text: 'transaction.NextOn', classname: 'i18n', datafield: 'transaction_date', editable: false, width: 110, cellsalign: 'left'},
+        { text: 'transaction.Account', classname: 'i18n', columntype: 'textbox', datafield: 'account', width: 177, editable: false },
+        { text: 'transaction.Frequency', classname: 'i18n', datafield: 'frequency', columntype: 'textbox', width: 80, editable: false },
+        { text: 'transaction.Description', classname: 'i18n', datafield: 'description', columntype: 'textbox' },
+        { text: 'transaction.Amount', classname: 'i18n', datafield: 'amount', width: 65, cellsalign: 'right', columntype: 'textbox',
+            validation: function (cell, value) {
+                var amount = parseFloat(value());
+                return isNaN(amount) ? { result: false, message: "It is not a number" } : true;
+            }
+        },
+    ];
+    settings.methods = [{
+        name: 'finish',
+        source: function() {
+            var $this = poupaniquel.model,
+                selectedrowindex = $this.getSelectedRowIndex();
+
+            if (selectedrowindex >= 0) {
+                var item = $this.items[selectedrowindex];
+                if (item) {
+                    var itemId = item.id(),
+                        url = BASE_API_URL + 'scheduled/transaction/finish';
+
+                    $.ajax({
+                        async: true,
+                        url: url,
+                        contentType: 'application/json',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: ko.toJSON(item),
+                        success: function(result) {
+                            $this.items.splice(selectedrowindex, 1)[0];
+                            $('#jqxgrid').jqxGrid('updatebounddata');
+                            $('#error').hide();
+                            $('#success').show();
+                        },
+                        error: function(response) {
+                            var divError = $('#error'),
+                                data = JSON.parse(response.responseText);
+
+                            divError.append('<span>' + data.messages[0] + '</span>');
+                            divError.show();
+                            $('#success').hide();
+                        }
+                    });
+                }
+            }
+        }
+    }];
+    poupaniquel.configure(settings);
+});
+</script>
+{% endblock %}
+
+{% block title %}<span data-i18n="title.UpcomingTransactions">Upcoming Transactions</span>{% endblock %}
+
+<div id="error" class="alert alert-error alert-block i18n" style="display:none">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 data-i18n="messages.error.title">Error</h4>
+    <span data-i18n="messages.error.saveOrUpdate"></span>
+    <ul></ul>
+</div>
+
+<div id="success" class="alert alert-success alert-block i18n" style="display:none">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 data-i18n="messages.success.title">Success</h4>
+    <span data-i18n="messages.success.saveOrUpdate">The data was successfully updated</span>
+</div>
+
+{% block top_toolbar %}{% endblock %}
+
+{% block bottom_toolbar %}
+<div class="btn-toolbar pagination-toolbar i18n">
+    <div class="btn-group">
+        <button data-bind='click: finish' class="btn btn-primary btndelete disabled"><i class="icon-ok icon-white"></i> <span data-i18n="buttons.Finish"> Pay it</span></button>
+    </div>
+</div>
+{% endblock %}

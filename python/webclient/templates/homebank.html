@@ -1,0 +1,68 @@
+{% extends 'base_site.html' %}
+
+{% block more_javascript %}
+<script type="text/javascript">
+$(function () {
+    var error = function(response) {
+        $('#error span:first').text(response.messages[0]);
+        $('#error').show();
+    };
+
+    $('#frmUpload').iframePostForm({
+        iframeID : 'iframe-post-form',
+        json : true,
+        post: function() {
+        },
+        complete: function (response) {
+            if (response.total > 0) {
+                $('#error').hide();
+                $('#frmUpload').hide();
+                $('#success').show();
+            } else {
+                error(response);
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h1 class="i18n"><span data-i18n="title.Importing.Importing"></span></h1>
+
+<div id="error" class="alert alert-error alert-block i18n" style="display:none">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4>Error</h4>
+    <span></span><br/>
+    <span data-i18n="importing.ErrorMessage"></span>
+</div>
+
+<div id="success" class="alert alert-success alert-block i18n" style="display:none">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4>Success</h4>
+    <span data-i18n="importing.result.message"></span>
+</div>
+
+<form id="frmUpload" name="frmUpload" action="{{ url_for('homebank_importing') }}" method="POST" enctype="multipart/form-data" class="form-horizontal i18n">
+    <legend>Homebank</legend>
+
+    <div id="loading" style="display: none">
+        <img src="{{ url_for('static', filename='img/loading.gif') }}" alt="Loading..." title="Loading..." />
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="filename">Homebank file (*.xhb)</label>
+        <div class="controls">
+            <input id="homebank" type="file" size="45" name="filename" class=""><br/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">&nbsp;</label>
+        <div class="controls">
+            <button type="submit" class="btn btn-primary" data-i18n="importing.Upload">Upload</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

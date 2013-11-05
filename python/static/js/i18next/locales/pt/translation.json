@@ -1,0 +1,144 @@
+{
+  "nav": {
+    "Manage": "Gerenciar",
+    "Accounts": "Contas",
+    "Categories": "Categorias",
+    "Payees": "Fornecedores",
+    "Transactions": "Transações",
+    "ScheduledTransactions": "Agendamento",
+
+    "Reports": "Relatórios",
+    "Balance": "Saldo",
+
+    "Importing": "Importação",
+    "Csv": "Arquivo CSV",
+
+    "User": "Usuário",
+    "Login": "Login",
+    "Signup": "Cadastro",
+
+    "Calculator": "Calculadora"
+  },
+
+  "title": {
+    "UpcomingTransactions": "Próximos Vencimentos",
+    "GeneralInfo": "Obrigatório",
+    "OptionalInfo": "Opcional",
+    "AutomatedInsertion": "Agendamento",
+    "User": {
+      "Signup": "Cadastro",
+      "Login": "Login"
+    },
+    "Importing": {
+      "Importing": "Importar dados do arquivo",
+      "File": "Arquivo",
+      "DateFormat": "Formato de data",
+      "Separator": {
+        "Separator": "Separador",
+        "semicolon": "ponto e vírgula (;)",
+        "comma": "vírgula (,)",
+        "colon": "dois pontos (:)",
+        "hyphen": "hífen (-)",
+        "space": "espaço",
+        "tab": "tab"
+      }
+    }
+  },
+
+  "grid": {
+    "NextOn": "Próximo",
+    "Account": "Conta",
+    "Description": "Descrição",
+    "Amount": "Valor",
+    "Frequency": "Frequência",
+    "Every": "Repetições",
+    "Name": "Nome"
+  },
+
+  "transaction": {
+    "Account": "Conta",
+    "Description": "Descrição",
+    "Name": "Nome",
+    "Date": "Data",
+    "Amount": "Valor",
+    "Category": "Categoria",
+    "Payee": "Fornecedor",
+    "Every": "A cada",
+    "NextOn": "Próximo",
+    "Frequency": "Repetições",
+    "Save": "Salvar",
+    "Cancel": "Cancelar",
+    "Week": "Semana",
+    "Month": "Mês",
+    "Year": "Ano"
+  },
+
+  "reports": {
+    "balance": {
+      "MonthYear": "Mês/Ano",
+      "Balance": "Saldo"
+    }
+  },
+
+  "importing": {
+    "Account": "Conta",
+    "Upload": "Enviar",
+    "Template": "Modelo",
+    "ErrorMessage": "O arquivo não pode ser importado.",
+    "result": {
+      "title": "Resultado",
+      "message": "Os dados abaixo foram importados com sucesso."
+    }
+  },
+
+  "user": {
+    "Username": "Email",
+    "Password": "Senha",
+    "signup": {
+      "legend": "Crie sua conta pessoal",
+      "button": "Cadastrar",
+      "success": "O usuário foi cadastrado. Utilize o token abaixo para autenticação em outros dispositivos.",
+      "error": "Não foi possível efetuar o cadastro."
+    },
+    "login": {
+      "legend": "Login usando email e senha",
+      "button": "Ok",
+      "error": "Não foi possível efetuar o login usando esse email ou senha.",
+      "isAuthenticated": "Você já está logado."
+    }
+  },
+
+  "calculator": {
+    "Description": "Descrição",
+    "Amount": "Valor (R$)",
+    "Balance": "Saldo",
+    "Income": "Entradas",
+    "Expense": "Saídas",
+    "Others": "Outros",
+    "Result": "Resultado",
+    "Calculate": "Calcular",
+    "error": {
+      "message": "Houve um erro durante o cálculo."
+    }
+  },
+
+  "messages": {
+    "success": {
+      "title": "Sucesso",
+      "saveOrUpdate": "As informações foram salvas com sucesso."
+    },
+    "error": {
+      "title": "Erro",
+      "saveOrUpdate": "Não foi possível salvar as alterações."
+    }
+  },
+
+  "buttons": {
+    "Finish": "Finalizar",
+    "Add": "Adicionar",
+    "Save": "Salvar",
+    "Remove": "Remover",
+    "Refresh": "Atualizar",
+    "Filter": "Filtrar"
+  }
+}

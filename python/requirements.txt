@@ -1,0 +1,36 @@
+# deploy
+fabric==1.4.3
+uwsgi==1.3
+ssh==1.7.14
+wsgiref==0.1.2
+setuptools==0.6c11
+ez-setup==0.9
+
+# production
+Flask==0.9
+Flask-Login==0.1.3
+Jinja2==2.6
+Werkzeug==0.8.3
+argparse==1.2.1
+pycrypto==2.6
+pymongo==2.3
+python-dateutil==2.1
+six==1.2.0
+unicodecsv==0.9.0
+
+# database
+#Flask-MongoAlchemy==0.5.4
+#MongoAlchemy==0.12.1
+Elixir==0.7.1
+sqlalchemy-elixir-validations==0.1.1
+SQLAlchemy==0.7.9
+MySQL-python==1.2.4c1
+
+# testing
+nose==1.2.1
+nosexcover==1.0.7
+coverage==3.5.2
+pylint==0.25.2
+pep8==1.3.3
+
+

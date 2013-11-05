@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
+  <link rel="stylesheet" type="text/css" href="vendor/jasmine-1.2.0/jasmine.css">
+  
+  <script type="text/javascript" src="vendor/jasmine-1.2.0/jasmine.js"></script>
+  <script type="text/javascript" src="vendor/jasmine-1.2.0/jasmine-html.js"></script>
+  <script type="text/javascript" src="vendor/jasmine-1.2.0/jasmine-jquery.js"></script>
+  <script type="text/javascript" src="vendor/jasmine-1.2.0/console-runner.js"></script>
+  <script type="text/javascript" src="node_modules/grunt-jasmine-task/tasks/jasmine/jasmine-helper.js"></script>
+
+  <script type="text/javascript" src="lib/jquery-1.8.0.min.js"></script>
+
+  <script type="text/javascript" src="lib/jqwidgets/jqxcore.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxdata.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxbuttons.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxscrollbar.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxmenu.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxgrid.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxgrid.pager.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxgrid.filter.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxgrid.sort.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxgrid.edit.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxgrid.selection.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxgrid.columnsresize.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxlistbox.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxdropdownlist.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxcalendar.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxnumberinput.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxdatetimeinput.js"></script>
+
+  <script type="text/javascript" src="lib/knockout.js"></script>
+
+  <script type="text/javascript" src="src/main.js"></script>
+  <script type="text/javascript" src="src/models.js"></script>
+  <script type="text/javascript" src="src/utils.js"></script>
+
+  <script type="text/javascript" src="test/Poupaniquel.js"></script>
+</head>
+
+<body>
+
+<script type="text/javascript">
+  var console_reporter = new jasmine.ConsoleReporter()
+  var jasmineEnv = jasmine.getEnv();
+  jasmineEnv.updateInterval = 1000;
+  jasmineEnv.addReporter(new jasmine.TrivialReporter());
+  jasmineEnv.addReporter(console_reporter);
+  jasmineEnv.execute();
+</script>
+
+
+
+</body>
+</html>
+
